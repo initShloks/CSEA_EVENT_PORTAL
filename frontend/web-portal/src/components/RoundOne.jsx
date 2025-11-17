@@ -126,7 +126,7 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
     3: "CROSSWORD", // Crossword is handled by the Crossword component
     4: "UPSIDE DOWN",
     5: "PROGRAMMING",
-    6: "PORTAL"
+    6: "PORTAL",
   };
 
   // Use backend-provided answer when available; fallback to builtin map
@@ -283,15 +283,15 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
 
   const getDiceTransformWithMouse = () => {
     const baseTransform = getDiceTransform(diceValue);
-    
+
     if (isDiceRolling) {
       // During roll, show the current dice value but don't apply mouse rotation
       // The CSS animation will handle the spinning effect
       return baseTransform;
     }
-    
+
     const mouseTransform = `rotateX(${mouseRotation.x}deg) rotateY(${mouseRotation.y}deg)`;
-    
+
     // Combine base transform with mouse rotation
     // The base transform sets which face is visible, mouse adds interactive rotation
     return `${baseTransform} ${mouseTransform}`;
@@ -374,8 +374,10 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
       document.body.style.cursor = "";
       try {
         if (document.exitFullscreen) await document.exitFullscreen();
-        else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
-        else if (document.mozCancelFullScreen) await document.mozCancelFullScreen();
+        else if (document.webkitExitFullscreen)
+          await document.webkitExitFullscreen();
+        else if (document.mozCancelFullScreen)
+          await document.mozCancelFullScreen();
         else if (document.msExitFullscreen) await document.msExitFullscreen();
       } catch (_) {}
       setShowRewardVideo(false);
@@ -445,14 +447,14 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
             disablePictureInPicture
             disableRemotePlayback
             style={{
-              width: '100vw',
-              height: '100vh',
-              objectFit: 'cover',
-              position: 'fixed',
+              width: "100vw",
+              height: "100vh",
+              objectFit: "cover",
+              position: "fixed",
               top: 0,
               left: 0,
               zIndex: 10000,
-              pointerEvents: 'none'
+              pointerEvents: "none",
             }}
           />
         </div>
@@ -540,52 +542,80 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
           >
             <source src={roundOneBgVideo} type="video/mp4" />
           </video>
-          
-          <div className={`expanded-card-hero-content ${currentChallenge?.type === 'crossword' || currentChallenge?.source === 'crossword' ? 'crossword-full-width' : ''}`}>
-            {currentChallenge.type !== 'crossword' && currentChallenge.source !== 'crossword' && (
-              <>
-                <div className="save-max-banner">
-                  <p className="save-max-text">Complete this round to save Max</p>
-                </div>
-                <h3 className="expanded-challenge-title">{currentChallenge.title}</h3>
-                <p className="expanded-challenge-desc">{currentChallenge.description}</p>
-              </>
-            )}
-            
+
+          <div
+            className={`expanded-card-hero-content ${
+              currentChallenge?.type === "crossword" ||
+              currentChallenge?.source === "crossword"
+                ? "crossword-full-width"
+                : ""
+            }`}
+          >
+            {currentChallenge.type !== "crossword" &&
+              currentChallenge.source !== "crossword" && (
+                <>
+                  <div className="save-max-banner">
+                    <p className="save-max-text">
+                      Complete this round to save Max
+                    </p>
+                  </div>
+                  <h3 className="expanded-challenge-title">
+                    {currentChallenge.title}
+                  </h3>
+                  <p className="expanded-challenge-desc">
+                    {currentChallenge.description}
+                  </p>
+                </>
+              )}
+
             <div className="expanded-challenge-display">
-              {currentChallenge.type === 'binary' && (
+              {currentChallenge.type === "binary" && (
                 <div className="challenge-display-box">
-                  <p className="challenge-text-large">{currentChallenge.challenge}</p>
-                  <small className="challenge-hint">Hint: Convert binary to ASCII text</small>
+                  <p className="challenge-text-large">
+                    {currentChallenge.challenge}
+                  </p>
+                  <small className="challenge-hint">
+                    Hint: Convert binary to ASCII text
+                  </small>
                 </div>
               )}
-              {currentChallenge.type === 'quiz' && (
+              {currentChallenge.type === "quiz" && (
                 <div className="challenge-display-box">
-                  <p className="challenge-question-large">{currentChallenge.challenge}</p>
+                  <p className="challenge-question-large">
+                    {currentChallenge.challenge}
+                  </p>
                 </div>
               )}
-              {(currentChallenge.type === 'crossword' || currentChallenge.source === 'crossword') && (
-                <div style={{ 
-                  width: '100%',
-                  height: '100%',
-                  background: 'transparent', 
-                  border: 'none', 
-                  padding: 0,
-                  margin: 0
-                }}>
-                  <Crossword 
-                    year={loggedInYear || '1st'} 
+              {(currentChallenge.type === "crossword" ||
+                currentChallenge.source === "crossword") && (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    background: "transparent",
+                    border: "none",
+                    padding: 0,
+                    margin: 0,
+                  }}
+                >
+                  <Crossword
+                    year={loggedInYear || "1st"}
                     onComplete={() => {
                       setIsCompleted(true);
-                      setError('');
-                      
+                      setError("");
+
                       // Mark crossword as answered
-                      setAnsweredQuestions((prev) => new Set([...prev, currentChallenge.id]));
-                      
+                      setAnsweredQuestions(
+                        (prev) => new Set([...prev, currentChallenge.id])
+                      );
+
                       // Mark crossword as completed and check if all are done
-                      setCompletedQuestions(prev => {
+                      setCompletedQuestions((prev) => {
                         const newCompleted = new Set([...prev, expandedCard]);
-                        const questionsToUse = Array.isArray(allQues) && allQues.length ? allQues : BUILTIN_TASKS;
+                        const questionsToUse =
+                          Array.isArray(allQues) && allQues.length
+                            ? allQues
+                            : BUILTIN_TASKS;
                         // Check if all questions are completed
                         if (newCompleted.size === questionsToUse.length) {
                           // All questions completed, show reward video after closing
@@ -593,8 +623,8 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
                             setExpandedCard(null);
                             setPreviewCardId(null);
                             setIsCompleted(false);
-                            setAnswer('');
-                            setError('');
+                            setAnswer("");
+                            setError("");
                             setShowRewardVideo(true);
                           }, 1000);
                         } else {
@@ -603,8 +633,8 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
                             setExpandedCard(null);
                             setPreviewCardId(null);
                             setIsCompleted(false);
-                            setAnswer('');
-                            setError('');
+                            setAnswer("");
+                            setError("");
                             setShowDicePopup(true);
                           }, 1000);
                         }
@@ -614,45 +644,73 @@ const RoundOne = ({ loggedInYear, onComplete }) => {
                   />
                 </div>
               )}
-              {currentChallenge.type === 'riddle' && (
+              {currentChallenge.type === "riddle" && (
                 <div className="challenge-display-box">
-                  <p className="challenge-riddle-large">{currentChallenge.challenge}</p>
+                  <p className="challenge-riddle-large">
+                    {currentChallenge.challenge}
+                  </p>
                 </div>
               )}
-              {(currentChallenge.type === 'unscramble' || currentChallenge.type === 'unscrambled') && (
+              {(currentChallenge.type === "unscramble" ||
+                currentChallenge.type === "unscrambled") && (
                 <div className="challenge-display-box">
-                  <p className="challenge-scramble-large">{currentChallenge.challenge}</p>
-                  <small className="challenge-hint">Unscramble the letters to form a word</small>
+                  <p className="challenge-scramble-large">
+                    {currentChallenge.challenge}
+                  </p>
+                  <small className="challenge-hint">
+                    Unscramble the letters to form a word
+                  </small>
                 </div>
               )}
-              {(currentChallenge.type === 'steganography' || currentChallenge.source === 'steg') && (
+              {(currentChallenge.type === "steganography" ||
+                currentChallenge.source === "steg") && (
                 <div className="challenge-display-box">
                   {currentChallenge.url && (
-                    <img src={currentChallenge.url} alt="Steganography challenge" style={{ maxWidth: '100%', marginBottom: '1rem', borderRadius: '8px' }} />
+                    <img
+                      src={currentChallenge.url}
+                      alt="Steganography challenge"
+                      style={{
+                        maxWidth: "100%",
+                        marginBottom: "1rem",
+                        borderRadius: "8px",
+                      }}
+                    />
                   )}
-                  <p className="challenge-text-large">{currentChallenge.challenge}</p>
-                  <small className="challenge-hint">Analyze the image for hidden text or data</small>
+                  <p className="challenge-text-large">
+                    {currentChallenge.challenge}
+                  </p>
+                  <small className="challenge-hint">
+                    Analyze the image for hidden text or data
+                  </small>
                 </div>
               )}
             </div>
 
-            {currentChallenge.type !== 'crossword' && currentChallenge.source !== 'crossword' && (
-              <form onSubmit={handleAnswerSubmit} className="expanded-answer-form">
-                <input
-                  type="text"
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  placeholder="Enter your answer"
-                  className="expanded-answer-input"
-                  required
-                  autoFocus
-                  disabled={isCompleted}
-                />
-                <button type="submit" className="expanded-submit-button" disabled={isCompleted}>
-                  {isCompleted ? '✓ Completed!' : 'Submit Answer'}
-                </button>
-              </form>
-            )}
+            {currentChallenge.type !== "crossword" &&
+              currentChallenge.source !== "crossword" && (
+                <form
+                  onSubmit={handleAnswerSubmit}
+                  className="expanded-answer-form"
+                >
+                  <input
+                    type="text"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder="Enter your answer"
+                    className="expanded-answer-input"
+                    required
+                    autoFocus
+                    disabled={isCompleted}
+                  />
+                  <button
+                    type="submit"
+                    className="expanded-submit-button"
+                    disabled={isCompleted}
+                  >
+                    {isCompleted ? "✓ Completed!" : "Submit Answer"}
+                  </button>
+                </form>
+              )}
 
             {error && (
               <div style={{ marginTop: 8, color: "salmon" }}>{error}</div>

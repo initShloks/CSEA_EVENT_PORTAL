@@ -1204,7 +1204,9 @@ const Crossword = ({ year, onComplete }) => {
         if (data.success && data.data?.allCorrect) {
           if (onComplete) onComplete();
         } else if (data.success) {
-          showToastNotification(`${data.data.correct} / ${data.data.total} correct`);
+          showToastNotification(
+            `${data.data.correct} / ${data.data.total} correct`
+          );
         } else {
           showToastNotification(data.message || "Error submitting answers");
         }
@@ -1872,7 +1874,9 @@ const Crossword = ({ year, onComplete }) => {
             position: "fixed",
             top: "20px",
             left: "50%",
-            transform: `translateX(-50%) translateY(${showToast ? "0" : "-100px"})`,
+            transform: `translateX(-50%) translateY(${
+              showToast ? "0" : "-100px"
+            })`,
             background: "rgba(230, 25, 75, 0.95)",
             color: "#fff",
             padding: "12px 24px",
